@@ -1,0 +1,36 @@
+# Entornos virtuales (Python)
+venv/
+env/
+.venv/
+
+# Variables de entorno y secretos (¡CRÍTICO!)
+.env
+*.pem
+
+# Archivos compilados y caché de Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Reportes de pruebas
+htmlcov/
+coverage.xml
+.coverage
+
+# Node.js / TypeScript (Reto 3)
+node_modules/
+dist/
+build/
+.npm/
+
+# Bases de datos SQLite (si haces pruebas locales)
+db.sqlite3
+
+# Archivos del Sistema Operativo y Editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
