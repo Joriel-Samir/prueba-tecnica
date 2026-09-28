@@ -45,4 +45,4 @@
 
 ## 2. Estrategia de Refactorización
 
-Por ahora defino la arquitectura de la solucion basandonde en principios SOLID 
+1. **Patrón Strategy / Inversión de Dependencias:** Se definió la clase abstracta `SentimentProvider` como interfaz. `ExcelSentimentAnalyzer` depende de esta abstracción, permitiendo inyectar un `MockProvider` en tests o cambiar a otros proveedores en producción
