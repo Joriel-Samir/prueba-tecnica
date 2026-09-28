@@ -43,3 +43,6 @@
 
 ---
 
+## 2. Estrategia de Refactorización
+
+Por ahora defino la arquitectura de la solucion basandonde en principios SOLID 
