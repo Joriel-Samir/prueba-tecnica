@@ -1,7 +1,8 @@
 import logging
 import os
-from typing import Optional, Tuple
+
 import openpyxl
+
 from src.provider import SentimentProvider
 
 logger = logging.getLogger(__name__)
@@ -14,7 +15,7 @@ class ExcelSentimentAnalyzer:
         self,
         provider: SentimentProvider,
         text_col: int = 3,
-        out_cols: Tuple[int, int, int] = (4, 5, 6),
+        out_cols: tuple[int, int, int] = (4, 5, 6),
     ) -> None:
         self.provider = provider
         self.text_col = text_col
@@ -24,7 +25,7 @@ class ExcelSentimentAnalyzer:
         self,
         input_path: str,
         output_path: str,
-        sheet_name: Optional[str] = None,
+        sheet_name: str | None = None,
     ) -> None:
         """Procesa el archivo Excel de entrada y guarda el resultado en output_path."""
         if not os.path.isfile(input_path):
@@ -50,7 +51,9 @@ class ExcelSentimentAnalyzer:
         for row in range(2, max_row + 1):
             cell_value = sheet.cell(row, self.text_col).value
             if not cell_value:
-                logger.debug("Fila %d vacía en la columna %d. Omitiendo.", row, self.text_col)
+                logger.debug(
+                    "Fila %d vacía en la columna %d. Omitiendo.", row, self.text_col
+                )
                 continue
 
             text = str(cell_value).strip()
@@ -63,4 +66,6 @@ class ExcelSentimentAnalyzer:
             sheet.cell(row, pos_col).value = sentiments["positive"]
 
         workbook.save(output_path)
-        logger.info("Proceso completado con éxito. Archivo guardado en: %s", output_path)
+        logger.info(
+            "Proceso completado con éxito. Archivo guardado en: %s", output_path
+        )

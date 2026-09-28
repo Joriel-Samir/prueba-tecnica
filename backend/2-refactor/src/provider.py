@@ -1,7 +1,7 @@
 import logging
 import time
 from abc import ABC, abstractmethod
-from typing import Dict
+
 import paralleldots
 
 logger = logging.getLogger(__name__)
@@ -11,9 +11,8 @@ class SentimentProvider(ABC):
     """Interfaz abstracta para proveedores de análisis de sentimiento."""
 
     @abstractmethod
-    def analyze(self, text: str) -> Dict[str, float]:
+    def analyze(self, text: str) -> dict[str, float]:
         """Analiza el texto y retorna las puntuaciones de sentimiento en porcentaje."""
-        pass
 
 
 class ParallelDotsProvider(SentimentProvider):
@@ -25,7 +24,7 @@ class ParallelDotsProvider(SentimentProvider):
         self.api_key = api_key
         paralleldots.set_api_key(self.api_key)
 
-    def analyze(self, text: str) -> Dict[str, float]:
+    def analyze(self, text: str) -> dict[str, float]:
         max_retries = 3
         base_delay = 2
 
@@ -46,7 +45,7 @@ class ParallelDotsProvider(SentimentProvider):
                     "positive": round(sentiments.get("positive", 0.0) * 100, 3),
                 }
 
-            except Exception as exc:
+            except Exception as exc: # noqa: BLE001
                 logger.warning(
                     "Error al comunicarse con la API (intento %d/%d): %s",
                     attempt + 1,
