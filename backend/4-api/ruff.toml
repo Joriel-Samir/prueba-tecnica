@@ -1,0 +1,9 @@
+line-length = 88
+target-version = "py312"
+exclude = ["migrations"]
+
+[lint]
+select = ["E", "F", "I", "B"]
+
+[lint.per-file-ignores]
+"config/settings.py" = ["E501"]
