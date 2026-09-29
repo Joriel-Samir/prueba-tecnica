@@ -22,7 +22,7 @@ npm run build
 npm start -- 99
 ```
 
-La función `leastNumberWithBouncyRatio(percent: number): number` se exporta desde `src/index.ts`. El paquete compilado expone ese módulo y registra el comando `bouncy-ratio` como CLI (`bouncy-ratio 99`). Para generar el módulo y el ejecutable antes de consumir/publicar el paquete, ejecutar `npm run build`.
+Las funciones `leastNumberWithBouncyRatio(percent: number): number` y `least_number_with_bouncy_ratio(percent: number): number` se exportan desde `src/index.ts`; ambas son el mismo callable, y la segunda conserva el nombre de Python para facilitar la paridad entre lenguajes. El paquete compilado expone ese módulo y registra el comando `bouncy-ratio` como CLI (`bouncy-ratio 99`). Para generar el módulo y el ejecutable antes de consumir/publicar el paquete, ejecutar `npm run build`.
 
 Ambas implementaciones validan 50 % → 538, 90 % → 21780 y 99 % → 1587000. La comparación de proporciones es entera: `100 × cantidad_bouncy === porcentaje × número`; no se usa coma flotante.
 
