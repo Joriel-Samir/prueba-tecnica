@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from unittest.mock import patch as mock_patch
 
 import openpyxl
@@ -35,7 +36,7 @@ class FailingSentimentProvider(SentimentProvider):
 
 
 @pytest.fixture
-def dummy_excel(tmp_path):
+def dummy_excel(tmp_path: Path) -> str:
     file_path = tmp_path / "input_test.xlsx"
     workbook = openpyxl.Workbook()
     sheet = workbook.active
@@ -43,11 +44,12 @@ def dummy_excel(tmp_path):
     sheet.cell(2, 3).value = "El producto es excelente"
     sheet.cell(3, 3).value = "La atención fue terrible"
     sheet.cell(4, 3).value = None  # Fila vacía
+    sheet.cell(5, 3).value = "Comentario adicional"
     workbook.save(file_path)
     return str(file_path)
 
 
-def test_excel_analyzer_success(dummy_excel, tmp_path):
+def test_excel_analyzer_success(dummy_excel: str, tmp_path: Path) -> None:
     output_path = str(tmp_path / "output_test.xlsx")
     provider = MockSentimentProvider()
     analyzer = ExcelSentimentAnalyzer(provider=provider, text_col=3)
@@ -75,10 +77,15 @@ def test_excel_analyzer_success(dummy_excel, tmp_path):
     assert sheet.cell(4, 5).value is None
     assert sheet.cell(4, 6).value is None
 
+    # Las filas posteriores al rango fijo del script original también se procesan.
+    assert sheet.cell(5, 4).value == 0.0
+    assert sheet.cell(5, 5).value == 0.0
+    assert sheet.cell(5, 6).value == 0.0
+
 
 def test_excel_analyzer_skips_failed_row_instead_of_writing_zeros(
-    dummy_excel, tmp_path
-):
+    dummy_excel: str, tmp_path: Path
+) -> None:
     """Si el proveedor falla, la fila queda en blanco (no con 0,0,0 que parece un dato real)."""
     output_path = str(tmp_path / "output_test.xlsx")
     analyzer = ExcelSentimentAnalyzer(provider=FailingSentimentProvider(), text_col=3)
@@ -91,7 +98,7 @@ def test_excel_analyzer_skips_failed_row_instead_of_writing_zeros(
     assert sheet.cell(2, 6).value is None
 
 
-def test_excel_analyzer_file_not_found(tmp_path):
+def test_excel_analyzer_file_not_found(tmp_path: Path) -> None:
     provider = MockSentimentProvider()
     analyzer = ExcelSentimentAnalyzer(provider=provider)
 
@@ -99,7 +106,7 @@ def test_excel_analyzer_file_not_found(tmp_path):
         analyzer.process("archivo_inexistente.xlsx", str(tmp_path / "out.xlsx"))
 
 
-def test_main_loads_api_key_from_dotenv(monkeypatch):
+def test_main_loads_api_key_from_dotenv(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("PARALLELDOTS_API_KEY", raising=False)
 
     with (
@@ -123,7 +130,7 @@ def test_main_loads_api_key_from_dotenv(monkeypatch):
     )
 
 
-def test_parallel_dots_provider_success():
+def test_parallel_dots_provider_success() -> None:
     """El proveedor real convierte las fracciones (0-1) que da la API en porcentajes."""
     mock_response = {"sentiment": {"negative": 0.05, "neutral": 0.10, "positive": 0.85}}
 
@@ -140,7 +147,7 @@ def test_parallel_dots_provider_success():
         assert result["negative"] == 5.0
 
 
-def test_parallel_dots_provider_failure_and_retry():
+def test_parallel_dots_provider_failure_and_retry() -> None:
     """Si la API falla siempre, se reintenta 3 veces y se lanza un error (nunca ceros inventados)."""
     with (
         mock_patch(
