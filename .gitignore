@@ -6,11 +6,13 @@ env/
 # Variables de entorno y secretos (¡CRÍTICO!)
 .env
 *.pem
+/backend/2-refactor/settings.cfg
 
 # Archivos compilados y caché de Python
 __pycache__/
 *.py[cod]
 *$py.class
+*.egg-info/
 .pytest_cache/
 .ruff_cache/
 .mypy_cache/

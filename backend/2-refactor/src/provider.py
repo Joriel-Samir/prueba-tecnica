@@ -7,16 +7,23 @@ import paralleldots
 logger = logging.getLogger(__name__)
 
 
+class SentimentAnalysisError(Exception):
+    """Se lanza cuando no fue posible obtener el sentimiento de un texto."""
+
+
 class SentimentProvider(ABC):
     """Interfaz abstracta para proveedores de análisis de sentimiento."""
 
     @abstractmethod
     def analyze(self, text: str) -> dict[str, float]:
-        """Analiza el texto y retorna las puntuaciones de sentimiento en porcentaje."""
+        """Analiza el texto y retorna las puntuaciones de sentimiento en porcentaje.
+
+        Lanza SentimentAnalysisError si no se pudo obtener un resultado.
+        """
 
 
 class ParallelDotsProvider(SentimentProvider):
-    """Implementación de SentimentProvider para ParallelDots con Backoff exponencial."""
+    """Implementación de SentimentProvider para ParallelDots con backoff exponencial."""
 
     def __init__(self, api_key: str) -> None:
         if not api_key:
@@ -27,16 +34,16 @@ class ParallelDotsProvider(SentimentProvider):
     def analyze(self, text: str) -> dict[str, float]:
         max_retries = 3
         base_delay = 2
+        last_error: Exception | None = None
 
         for attempt in range(max_retries):
             try:
                 response = paralleldots.sentiment(text)
 
                 if "sentiment" not in response:
-                    logger.warning(
-                        "Respuesta inesperada de la API en la fila: %s", response
+                    raise SentimentAnalysisError(
+                        f"Respuesta inesperada de la API: {response}"
                     )
-                    return {"negative": 0.0, "neutral": 0.0, "positive": 0.0}
 
                 sentiments = response["sentiment"]
                 return {
@@ -45,19 +52,22 @@ class ParallelDotsProvider(SentimentProvider):
                     "positive": round(sentiments.get("positive", 0.0) * 100, 3),
                 }
 
-            except Exception as exc: # noqa: BLE001
+            except Exception as exc:  # noqa: BLE001
+                last_error = exc
                 logger.warning(
                     "Error al comunicarse con la API (intento %d/%d): %s",
                     attempt + 1,
                     max_retries,
                     exc,
                 )
-                if attempt == max_retries - 1:
-                    logger.error("Se agotaron los reintentos para el texto actual.")
-                    return {"negative": 0.0, "neutral": 0.0, "positive": 0.0}
+                if attempt < max_retries - 1:
+                    sleep_time = base_delay * (2**attempt)
+                    logger.info(
+                        "Esperando %d segundos antes de reintentar...", sleep_time
+                    )
+                    time.sleep(sleep_time)
 
-                sleep_time = base_delay * (2**attempt)
-                logger.info("Esperando %d segundos antes de reintentar...", sleep_time)
-                time.sleep(sleep_time)
-
-        return {"negative": 0.0, "neutral": 0.0, "positive": 0.0}
+        logger.error("Se agotaron los reintentos para el texto actual.")
+        raise SentimentAnalysisError(
+            f"No se pudo analizar el texto tras {max_retries} intentos"
+        ) from last_error

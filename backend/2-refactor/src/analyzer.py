@@ -3,7 +3,7 @@ import os
 
 import openpyxl
 
-from src.provider import SentimentProvider
+from src.provider import SentimentAnalysisError, SentimentProvider
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +38,10 @@ class ExcelSentimentAnalyzer:
         if sheet_name and sheet_name in workbook.sheetnames:
             sheet = workbook[sheet_name]
         else:
+            if sheet_name:
+                logger.warning(
+                    "La hoja '%s' no existe, se usa la hoja activa.", sheet_name
+                )
             sheet = workbook.active
 
         neg_col, neu_col, pos_col = self.out_cols
@@ -50,16 +54,23 @@ class ExcelSentimentAnalyzer:
 
         for row in range(2, max_row + 1):
             cell_value = sheet.cell(row, self.text_col).value
-            if not cell_value:
+            text = str(cell_value).strip() if cell_value is not None else ""
+
+            if not text:
                 logger.debug(
                     "Fila %d vacía en la columna %d. Omitiendo.", row, self.text_col
                 )
                 continue
 
-            text = str(cell_value).strip()
             logger.debug("Procesando fila %d: '%s'", row, text[:30])
 
-            sentiments = self.provider.analyze(text)
+            try:
+                sentiments = self.provider.analyze(text)
+            except SentimentAnalysisError as exc:
+                logger.error(
+                    "Fila %d: no se pudo analizar (%s). Se deja en blanco.", row, exc
+                )
+                continue
 
             sheet.cell(row, neg_col).value = sentiments["negative"]
             sheet.cell(row, neu_col).value = sentiments["neutral"]

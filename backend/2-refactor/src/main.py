@@ -3,6 +3,8 @@ import logging
 import os
 import sys
 
+from dotenv import load_dotenv
+
 from src.analyzer import ExcelSentimentAnalyzer
 from src.provider import ParallelDotsProvider
 
@@ -15,6 +17,7 @@ def setup_logging() -> None:
 
 
 def main() -> None:
+    load_dotenv()
     setup_logging()
     logger = logging.getLogger(__name__)
 
@@ -59,7 +62,7 @@ def main() -> None:
             output_path=args.output,
             sheet_name=args.sheet,
         )
-    except Exception as exc: # noqa: BLE001
+    except Exception as exc:  # noqa: BLE001
         logger.error("Error inesperado durante la ejecución: %s", exc)
         sys.exit(1)
 
