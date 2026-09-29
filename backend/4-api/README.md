@@ -7,6 +7,7 @@ Framework elegido: **Django REST Framework** (justificación completa: pendiente
 ```bash
 cp .env.example .env
 docker compose up --build
+curl http://localhost/api/health/
 ```
 
 La plantilla contiene únicamente valores ficticios para desarrollo local. Antes de
