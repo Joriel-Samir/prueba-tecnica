@@ -2,11 +2,19 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
-import { leastNumberWithBouncyRatio } from "../src/index.js";
+import {
+  leastNumberWithBouncyRatio,
+  least_number_with_bouncy_ratio,
+} from "../src/index.js";
 
 const projectDirectory = fileURLToPath(new URL("..", import.meta.url));
 
 describe("leastNumberWithBouncyRatio", () => {
+  it("also exports the Python-compatible function name", () => {
+    expect(least_number_with_bouncy_ratio).toBe(leastNumberWithBouncyRatio);
+    expect(least_number_with_bouncy_ratio(50)).toBe(538);
+  });
+
   it.each([
     [50, 538],
     [90, 21_780],
