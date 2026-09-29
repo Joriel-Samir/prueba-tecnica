@@ -48,3 +48,6 @@ export function leastNumberWithBouncyRatio(percent: number): number {
     number += 1;
   }
 }
+
+/** Python-compatible alias for callers that share the same API name across languages. */
+export const least_number_with_bouncy_ratio = leastNumberWithBouncyRatio;
