@@ -58,20 +58,14 @@ def test_administrador_crea_actualiza_y_elimina_actividad(administrador, asociad
 
 
 @pytest.mark.django_db
-def test_asociado_puede_crear_solo_actividades_para_si(asociado):
-    otro = Asociado.objects.create_user(
-        email="otro@example.com", password="otra-password", nombre="Otro"
-    )
+def test_asociado_no_puede_crear_actividades(asociado):
     client = APIClient()
     client.force_authenticate(asociado)
 
-    propia = client.post(URL, _payload(asociado), format="json")
-    ajena = client.post(URL, _payload(otro), format="json")
+    response = client.post(URL, _payload(asociado), format="json")
 
-    assert propia.status_code == 201
-    assert propia.json()["creador"] == asociado.pk
-    assert ajena.status_code == 403
-    assert Actividad.objects.count() == 1
+    assert response.status_code == 403
+    assert Actividad.objects.count() == 0
 
 
 @pytest.mark.django_db
@@ -92,8 +86,29 @@ def test_asociado_ve_solo_actividades_asignadas_o_creadas(asociado, administrado
 
 
 @pytest.mark.django_db
-def test_asociado_no_puede_editar_actividad_asignada(asociado, administrador):
-    actividad = _crear_actividad(asociado, administrador)
+def test_asociado_puede_editar_actividad_futura_asignada(asociado, administrador):
+    inicio = timezone.now() + timedelta(hours=1)
+    actividad = _crear_actividad(
+        asociado, administrador, inicio, inicio + timedelta(hours=1)
+    )
+    client = APIClient()
+    client.force_authenticate(asociado)
+
+    response = client.patch(
+        f"{URL}{actividad.pk}/", {"tipo": "Cambio"}, format="json"
+    )
+
+    assert response.status_code == 200
+    assert response.json()["tipo"] == "Cambio"
+    assert client.delete(f"{URL}{actividad.pk}/").status_code == 204
+
+
+@pytest.mark.django_db
+def test_asociado_no_puede_editar_actividad_pasada(asociado, administrador):
+    fin = timezone.now() - timedelta(hours=1)
+    actividad = _crear_actividad(
+        asociado, administrador, fin - timedelta(hours=1), fin
+    )
     client = APIClient()
     client.force_authenticate(asociado)
 
@@ -102,10 +117,32 @@ def test_asociado_no_puede_editar_actividad_asignada(asociado, administrador):
     )
 
     assert response.status_code == 403
+    actividad.refresh_from_db()
+    assert actividad.tipo == "Reunión"
+    assert client.delete(f"{URL}{actividad.pk}/").status_code == 403
 
 
 @pytest.mark.django_db
-def test_creador_puede_editar_actividad_creada(asociado):
+def test_asociado_puede_editar_actividad_en_curso(asociado, administrador):
+    ahora = timezone.now()
+    actividad = _crear_actividad(
+        asociado,
+        administrador,
+        ahora - timedelta(minutes=30),
+        ahora + timedelta(minutes=30),
+    )
+    client = APIClient()
+    client.force_authenticate(asociado)
+
+    response = client.patch(
+        f"{URL}{actividad.pk}/", {"tipo": "Cambio"}, format="json"
+    )
+
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_asociado_no_puede_editar_actividad_ajena_que_creo(asociado):
     otro = Asociado.objects.create_user(
         email="otro@example.com", password="otra-password", nombre="Otro"
     )
@@ -117,8 +154,7 @@ def test_creador_puede_editar_actividad_creada(asociado):
         f"{URL}{actividad.pk}/", {"tipo": "Cambio"}, format="json"
     )
 
-    assert response.status_code == 200
-    assert response.json()["tipo"] == "Cambio"
+    assert response.status_code == 403
 
 
 @pytest.mark.django_db
@@ -136,7 +172,7 @@ def test_no_permite_solapar_actividades_del_mismo_asociado(
         format="json",
     )
 
-    assert response.status_code == 400
+    assert response.status_code == 409
     assert Actividad.objects.count() == 1
 
 

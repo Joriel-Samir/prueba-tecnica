@@ -52,7 +52,7 @@ def test_registro_rechaza_email_con_solicitud_pendiente(password):
         format="json",
     )
 
-    assert response.status_code == 400
+    assert response.status_code == 409
     assert SolicitudRegistro.objects.count() == 1
 
 
@@ -68,7 +68,7 @@ def test_registro_rechaza_email_ya_registrado(asociado, password):
         format="json",
     )
 
-    assert response.status_code == 400
+    assert response.status_code == 409
     assert not SolicitudRegistro.objects.exists()
 
 
