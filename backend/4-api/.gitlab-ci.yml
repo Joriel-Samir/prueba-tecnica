@@ -17,6 +17,7 @@ test:
   services:
     - postgres:16
   variables:
+    SECRET_KEY: "$CI_JOB_TOKEN"
     POSTGRES_DB: test_db
     POSTGRES_USER: test_user
     POSTGRES_PASSWORD: "$CI_JOB_TOKEN"

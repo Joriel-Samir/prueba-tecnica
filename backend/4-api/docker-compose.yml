@@ -5,6 +5,8 @@ services:
       POSTGRES_DB: ${DB_NAME:-actividades}
       POSTGRES_USER: ${DB_USER:-actividades}
       POSTGRES_PASSWORD: "${DB_PASSWORD:?DB_PASSWORD debe definirse en .env}"
+    ports:
+      - "127.0.0.1:${DB_PORT:-5433}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -16,7 +18,7 @@ services:
   web:
     build: .
     environment:
-      SECRET_KEY: ${SECRET_KEY:-clave-solo-para-desarrollo-local}
+      SECRET_KEY: "${SECRET_KEY:?SECRET_KEY debe definirse en .env}"
       DEBUG: ${DEBUG:-False}
       ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1}
       DB_NAME: ${DB_NAME:-actividades}
