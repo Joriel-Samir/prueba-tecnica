@@ -24,3 +24,42 @@ Si bien el asistente fue de gran ayuda para extraer el código y armar la estruc
    * El mal uso de métodos como `save()` en `QuestionOption` que mezcla lógica y base de datos.
    * El gran problema que causaría usar `sqlite3` cuando la aplicación tenga muchos usuarios interactuando al mismo tiempo.
 4. **Límites de exploración:** Fui yo quien guió y limitó qué carpetas debía revisar el asistente, enfocándome solo en el código fuente importante y dejando por fuera archivos irrelevantes, para asegurar que el análisis fuera exacto.
+
+## Uso de GitHub Copilot durante la revisión y Backend 4
+
+Además de Gemini mencionado arriba, se utilizó **GitHub Copilot Chat en VS Code**
+durante la revisión integral de los cuatro retos y para completar Backend 4.
+
+- **Backend 1:** Copilot contrastó el análisis con el repositorio fuente para comprobar
+   los nombres y responsabilidades citados. El criterio y la redacción final se
+   revisaron manualmente.
+- **Backend 2:** Copilot auditó el refactor, ejecutó pytest/Ruff y detectó que faltaban
+   README, dependencias de desarrollo para mypy y pasos de configuración reproducibles.
+   No se sustituyó el proveedor ni se cambió la lógica del reto durante esa auditoría.
+- **Backend 3:** Copilot verificó paridad Python/TypeScript, casos de ejemplo, CLI,
+   pruebas y pasos de instalación; las implementaciones y los resultados se revisaron
+   ejecutando ambos toolchains.
+- **Backend 4:** Copilot ayudó a implementar y probar endpoints, permisos, errores
+   uniformes, importaciones CSV/XLSX, OpenAPI, PostgreSQL y configuración de secretos.
+   Las pruebas de carga se verificaron con archivos multipart reales y PostgreSQL en
+   Docker.
+
+### Prompts y guías relevantes
+
+- Revisión requisito por requisito de los cuatro entregables frente al enunciado
+   completo de la prueba.
+- En Backend 4: añadir primero pruebas para cargas CSV/XLSX y errores, implementar
+   procesamiento por fila y mantener las filas válidas aunque otra falle.
+- En Backend 2/3: comprobar instrucciones de ejecución en un entorno limpio, lint,
+   cobertura, mypy y paridad de la API Python/TypeScript.
+
+### Decisiones humanas y correcciones de salida
+
+- Se mantuvo DRF en Backend 4 por su integración con ORM, migraciones, admin y permisos;
+   el README explica esa elección y la aplicación de SOLID.
+- Se mantuvo PostgreSQL también para pruebas de Backend 4 porque así lo especifica la
+   prueba; la ejecución local usa el servicio Docker publicado en el puerto 5433.
+- La carga masiva admite CSV y XLSX, no Word, porque esos son los formatos pedidos.
+   Las filas inválidas se reportan individualmente sin revertir las válidas.
+- Se rechazaron los fallbacks fijos de secretos y se exigió configuración desde
+   `.env`/variables de CI; los placeholders del `.env.example` son ficticios.
