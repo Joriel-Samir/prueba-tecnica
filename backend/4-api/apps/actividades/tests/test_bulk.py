@@ -41,7 +41,7 @@ def test_carga_csv_crea_filas_validas_y_continua_tras_solapamiento(
 
 
 @pytest.mark.django_db
-def test_carga_xlsx_de_asociados_es_soportada(administrador, asociado):
+def test_carga_xlsx_de_actividades_es_soportada(administrador, asociado):
     workbook = Workbook()
     sheet = workbook.active
     sheet.append(["tipo", "descripcion", "fecha_inicio", "fecha_fin", "asociado"])
