@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from apps.core.exceptions import APIConflict
+
 from .models import SolicitudRegistro
 from .services import (
     EmailYaRegistrado,
@@ -20,4 +22,4 @@ class SolicitudRegistroSerializer(serializers.ModelSerializer):
         try:
             return crear_solicitud_registro(**validated_data)
         except (EmailYaRegistrado, SolicitudPendienteExistente) as error:
-            raise serializers.ValidationError({"email": str(error)}) from error
+            raise APIConflict(str(error)) from error

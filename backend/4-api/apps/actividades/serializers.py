@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from apps.core.exceptions import APIConflict
+
 from .models import Actividad
 from .services import ActividadSolapada, actualizar_actividad, crear_actividad
 
@@ -36,9 +38,7 @@ class ActividadSerializer(serializers.ModelSerializer):
         try:
             return crear_actividad(**validated_data)
         except ActividadSolapada as error:
-            raise serializers.ValidationError(
-                {"non_field_errors": [str(error)]}
-            ) from error
+            raise APIConflict(str(error)) from error
         except ValueError as error:
             raise serializers.ValidationError({"fecha_fin": str(error)}) from error
 
@@ -46,8 +46,6 @@ class ActividadSerializer(serializers.ModelSerializer):
         try:
             return actualizar_actividad(instance, validated_data)
         except ActividadSolapada as error:
-            raise serializers.ValidationError(
-                {"non_field_errors": [str(error)]}
-            ) from error
+            raise APIConflict(str(error)) from error
         except ValueError as error:
             raise serializers.ValidationError({"fecha_fin": str(error)}) from error

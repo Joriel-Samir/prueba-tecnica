@@ -5,7 +5,6 @@ from rest_framework.test import APIClient
 
 from apps.usuarios.models import Asociado
 
-
 URL = "/api/asociados/"
 
 
