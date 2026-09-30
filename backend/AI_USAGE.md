@@ -1,65 +1,42 @@
-# Declaración de Uso de Inteligencia Artificial
+# Declaración de uso de inteligencia artificial
 
-En cumplimiento con los lineamientos de la prueba técnica, a continuación se detalla el uso de herramientas de Inteligencia Artificial como apoyo durante el desarrollo de los retos.
+Aquí cuento qué asistentes de IA usé en la prueba, para qué los usé en cada reto y qué decisiones tomé yo o qué corregí de lo que me dieron. Cuando no guardé el registro de algo (por ejemplo, la versión exacta del modelo), lo dejo indicado. 
 
-## Herramientas Usadas
-* **Asistente:** Asistente de IA integrado en mi editor de código y Google antigravity especificamente Gemini 3.1 Pro 
-* **Propósito:** Leer los archivos más rápido, generar la estructura base para los documentos de texto (Markdown) y ayudar con la sintaxis de los diagramas Mermaid.
+## Herramientas que usé
 
-## Retos en los que se utilizó
-* **Backend 1 — Análisis de Arquitectura:** Utilicé el asistente para procesar de forma rápida el código fuente de los paquetes principales (`diagnosis`, `auth`, `corozina`) y armar el primer borrador del documento `ANALISIS.md`.
+| Herramienta | Para qué la usé |
+| --- | --- |
+| **Gemini 3.1 Pro (Google Antigravity)** | Primer borrador del análisis de arquitectura de Backend 1 y propuestas iniciales de los diagramas Mermaid. |
+| **GitHub Copilot Chat** | Analizar los requisitos, comparar alternativas y revisar documentación. También apoyo y revisión en Backend 4 y en la verificación final de los entregables. |
+| **Claude Sonnet 5.5 (Anthropic, chat en claude.ai)** | Backend 4: armar con él, por partes, la base del proyecto, el usuario con JWT, los modelos y el registro público (detalle más abajo). En Backend 2 y 3 lo usé para consultar y contrastar propuestas. |
 
-## Prompts y Guías Relevantes
-* *"Se analiza una Web API existente construida con Python 3.7 y Django 3 para el registro de pacientes... Defina las capas de la aplicación... Defina la responsabilidad de cada paquete..."* -> Le pasé el enunciado original para darle contexto inicial de lo que se iba a evaluar.
-* *"Devuelve los cambios, no se ven bien los flujogramas ni los modelos..."* -> Le pedí a la IA que revirtiera y corrigiera los diagramas, ya que inicialmente los había sobrecargado con estilos visuales que no cargaban bien.
+## Cómo lo usé en cada reto
 
-## Decisiones tomadas sin la IA y correcciones manuales
+- **Backend 1 — Análisis de arquitectura:** Gemini me ayudó con el borrador sobre `diagnosis`, `auth` y `corozina`. Copilot lo usé para contrastar nombres y comportamientos con el repositorio original. Los riesgos finales y la estrategia de migración los revisé y los dejé como yo los entendí.
+- **Backend 2 — Refactorización:** usé Copilot y Claude como apoyo para revisar alternativas de refactorización. Después Copilot me ayudó a revisar la configuración reproducible, los tipos y las herramientas de calidad. La solución mantiene el proveedor detrás de una interfaz y las pruebas no llaman al servicio real.
+- **Backend 3 — Números bouncy:** usé Copilot y Claude para contrastar cómo entendía el enunciado y los casos límite. Los resultados, las CLIs y la paridad entre Python y TypeScript los comprobé yo ejecutando las pruebas y los builds de los dos lenguajes.
+- **Backend 4 — API de actividades:**
+  - Con **Claude** lo fui armando por partes: (1) la estructura inicial con Docker Compose, Nginx, Gunicorn y el CI de GitLab; (2) el usuario personalizado con el correo como identificador y los tokens JWT; (3) los modelos (Administrador, Asociado, Actividad y Solicitud de registro) con el panel de administración; (4) el endpoint público de registro y el formato uniforme de errores. En todas esas partes las pruebas venían antes que el código, o sea, primero se corrían en rojo y después venía la implementación.
+  - El resto de la API lo programé yo: el CRUD de actividades, los permisos, la validación de solapamiento, la carga masiva por CSV/XLSX, OpenAPI y la configuración de PostgreSQL. Ahí usé **Copilot** solo como apoyo y para la revisión final. La carga la verifiqué con archivos multipart reales y una base PostgreSQL en Docker.
 
-Si bien el asistente fue de gran ayuda para extraer el código y armar la estructura inicial, el análisis final tiene mi revisión detallada y decisiones propias:
+## Prompts y guías que usé
 
-1. **Definición de la estrategia de migración:** Al principio, la IA sugería pasar a Django 5 directamente. Fui yo quien decidió plantear una estrategia más segura: definí que el primer paso indispensable debía ser reactivar y reparar las pruebas unitarias (`test_views.py`), y que la migración debía hacerse paso a paso por versiones LTS (3.2 -> 4.2 -> 5.x) para no romper el sistema.
-2. **Corrección técnica de los Diagramas Mermaid:** La IA generó diagramas con estilos CSS y una sintaxis compleja que rompía la visualización normal de Markdown. Tuve que intervenir, echar atrás esos cambios y obligarla a usar la sintaxis clásica y universal para asegurar que los gráficos se pudieran ver bien en cualquier visor.
-3. **Selección y enfoque de Riesgos Arquitecturales:** La herramienta me listaba riesgos muy genéricos. Fui yo quien filtró, analizó y eligió los 3 riesgos reales que más afectarían a este proyecto:
-   * El problema de seguridad en `CustomAuth` donde se confía ciegamente en el token social.
-   * El mal uso de métodos como `save()` en `QuestionOption` que mezcla lógica y base de datos.
-   * El gran problema que causaría usar `sqlite3` cuando la aplicación tenga muchos usuarios interactuando al mismo tiempo.
-4. **Límites de exploración:** Fui yo quien guió y limitó qué carpetas debía revisar el asistente, enfocándome solo en el código fuente importante y dejando por fuera archivos irrelevantes, para asegurar que el análisis fuera exacto.
+- Le pasaba el enunciado de cada reto y le pedía revisar requisito por requisito antes de darlo por terminado.
+- Backend 1: identificar capas, responsabilidades de paquetes y clases, riesgos y un plan de migración seguro.
+- Backend 2: desacoplar el proveedor, procesar todas las filas, reintentar con backoff y comprobar pruebas aisladas, cobertura, Ruff y mypy.
+- Backend 3: validar 50 %, 90 % y 99 %, usar aritmética entera, rechazar entradas fuera de rango y comprobar las dos implementaciones y sus CLIs.
+- Backend 4: trabajar con TDD (pruebas primero), separar en capas vista → servicio → repositorio, escribir pruebas de permisos e importaciones, validar fila por fila, conservar las filas válidas cuando otras fallan y verificar códigos HTTP, OpenAPI y la configuración de PostgreSQL.
 
-## Uso de GitHub Copilot durante la revisión y Backend 4
+## Decisiones mías y cosas que corregí
 
-Además de Gemini mencionado arriba, se utilizó **GitHub Copilot Chat en VS Code**
-durante la revisión integral de los cuatro retos y para completar Backend 4.
-
-- **Backend 1:** Copilot contrastó el análisis con el repositorio fuente para comprobar
-   los nombres y responsabilidades citados. El criterio y la redacción final se
-   revisaron manualmente.
-- **Backend 2:** Copilot auditó el refactor, ejecutó pytest/Ruff y detectó que faltaban
-   README, dependencias de desarrollo para mypy y pasos de configuración reproducibles.
-   No se sustituyó el proveedor ni se cambió la lógica del reto durante esa auditoría.
-- **Backend 3:** Copilot verificó paridad Python/TypeScript, casos de ejemplo, CLI,
-   pruebas y pasos de instalación; las implementaciones y los resultados se revisaron
-   ejecutando ambos toolchains.
-- **Backend 4:** Copilot ayudó a implementar y probar endpoints, permisos, errores
-   uniformes, importaciones CSV/XLSX, OpenAPI, PostgreSQL y configuración de secretos.
-   Las pruebas de carga se verificaron con archivos multipart reales y PostgreSQL en
-   Docker.
-
-### Prompts y guías relevantes
-
-- Revisión requisito por requisito de los cuatro entregables frente al enunciado
-   completo de la prueba.
-- En Backend 4: añadir primero pruebas para cargas CSV/XLSX y errores, implementar
-   procesamiento por fila y mantener las filas válidas aunque otra falle.
-- En Backend 2/3: comprobar instrucciones de ejecución en un entorno limpio, lint,
-   cobertura, mypy y paridad de la API Python/TypeScript.
-
-### Decisiones humanas y correcciones de salida
-
-- Se mantuvo DRF en Backend 4 por su integración con ORM, migraciones, admin y permisos;
-   el README explica esa elección y la aplicación de SOLID.
-- Se mantuvo PostgreSQL también para pruebas de Backend 4 porque así lo especifica la
-   prueba; la ejecución local usa el servicio Docker publicado en el puerto 5433.
-- La carga masiva admite CSV y XLSX, no Word, porque esos son los formatos pedidos.
-   Las filas inválidas se reportan individualmente sin revertir las válidas.
-- Se rechazaron los fallbacks fijos de secretos y se exigió configuración desde
-   `.env`/variables de CI; los placeholders del `.env.example` son ficticios.
+- **Backend 1:** puse como riesgos principales la autenticación social sin validar el token, los efectos secundarios de `QuestionOption.save()` y las limitaciones de SQLite. También simplifiqué la sintaxis de Mermaid para que los diagramas sí se vieran bien.
+- **Backend 2:** dejé el proveedor detrás de `SentimentProvider`. Decidí guardar el libro una sola vez y dejar vacía la fila cuando el análisis falla, en vez de poner ceros que parecen resultados reales.
+- **Backend 3:** comparé las proporciones con aritmética entera para evitar errores de punto flotante y dejé dos implementaciones independientes, una en Python y otra en TypeScript.
+- **Backend 4:**
+  - Escogí DRF porque ya lo manejo y porque el ORM, las migraciones y el admin de Django me resuelven varios requisitos (el panel y la aprobación de solicitudes, por ejemplo).
+  - Pedí que la configuración saliera del `startproject` de Django para que fuera la que conozco, y solo cambié lo que tenía que leer del entorno.
+  - Cuando vi contraseñas de prueba escritas en el CI pregunté si era un riesgo. Debido a esto las saqué del archivo y las pasé a variables enmascaradas de GitLab. También me aseguré de que no quedaran claves fijas de respaldo en el código.
+  - Pedí hacerlo tal cual dice la prueba: Administrador y Asociado como entidades separadas, y no un solo usuario con un campo de rol.
+  - La carga masiva acepta CSV y XLSX, no Word, porque el contrato no pide ese formato. Cada fila inválida se informa sin descartar las válidas.
+  - Una falla que encontramos en lo que generó Claude: al crear las migraciones no salieron las de las apps nuevas y las pruebas pasaban igual. Lo detectamos al revisar los archivos y lo corregimos, y desde ahí quedó como paso de revisión que cada app nueva tenga su carpeta `migrations`.
+- Al final, lo que me dio una IA lo revisé contra el enunciado, el código y las pruebas, y lo que no cuadraba lo corregí. Las IAs me sirvieron sobre todo para arrancar, contrastar ideas y revisar; el diseño final lo elegí yo y, como cuento arriba, buena parte de la API de Backend 4 la programé yo mismo.
