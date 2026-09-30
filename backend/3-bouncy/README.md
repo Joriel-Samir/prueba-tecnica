@@ -6,9 +6,16 @@ Implementación independiente en Python y TypeScript del problema de encontrar e
 
 ```powershell
 cd backend/3-bouncy/python
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements-dev.txt
 python -m pytest -q
 python bouncy.py 99
 ```
+
+En Linux/macOS, activa el entorno con `source .venv/bin/activate`. La implementación
+no requiere paquetes de runtime; `requirements-dev.txt` instala pytest para las
+pruebas.
 
 La función `least_number_with_bouncy_ratio(percent: int) -> int` está disponible desde `bouncy.py`. Acepta porcentajes enteros de 1 a 99; para valores inválidos lanza `TypeError` o `ValueError`. La CLI imprime el resultado y termina con error para entradas inválidas.
 
@@ -16,7 +23,8 @@ La función `least_number_with_bouncy_ratio(percent: int) -> int` está disponib
 
 ```powershell
 cd backend/3-bouncy/typescript
-npm install
+node --version # requiere Node.js 20 o superior
+npm ci
 npm test
 npm run build
 npm start -- 99
