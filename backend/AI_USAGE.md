@@ -10,6 +10,35 @@ Aquí cuento qué asistentes de IA usé en la prueba, para qué los usé en cada
 | **GitHub Copilot Chat** | Analizar los requisitos, comparar alternativas y revisar documentación. También apoyo y revisión en Backend 4 y en la verificación final de los entregables. |
 | **Claude Sonnet 5.5 (Anthropic, chat en claude.ai)** | Backend 4: armar con él, por partes, la base del proyecto, el usuario con JWT, los modelos y el registro público (detalle más abajo). En Backend 2 y 3 lo usé para consultar y contrastar propuestas. |
 
+### DevOps — Docker, CI/CD y k3s
+
+En esta parte trabajé yo sobre el repositorio de Backend 4 y usé GitHub Copilot Chat
+como apoyo puntual. Le pasé el enunciado y le pedí que revisara los riesgos de las
+definiciones de referencia, pero no acepté las propuestas sin contrastarlas con el
+Dockerfile, los requisitos de Django y la estructura real del repositorio.
+
+Con ese apoyo hice y revisé personalmente lo siguiente:
+
+- Convertí el Dockerfile en un build multi-etapa, instalé las dependencias desde wheels,
+  dejé un usuario no root y configuré Gunicorn como proceso principal.
+- Separé el pipeline en calidad, construcción/escaneo y publicación. Comprobé que las
+  pull requests no publiquen y que solo `main` y los tags `vX.Y.Z` puedan publicar.
+- Elegí las etiquetas de rama, versión semántica y SHA largo para poder rastrear cada
+  imagen hasta su commit. Para Kubernetes dejé documentado el uso de una etiqueta
+  inmutable o un digest.
+- Externalicé la configuración en ConfigMap y Secret, sin guardar tokens ni contraseñas
+  reales en Git. También revisé que el nombre usado por Kubernetes sea `SECRET_KEY`, que
+  es el que realmente lee `config/settings.py`.
+- Añadí readiness y liveness sobre `/api/health/`, límites de recursos, ejecución sin
+  privilegios y una estrategia `RollingUpdate` con `maxUnavailable: 0`.
+- Construí la imagen localmente, ejecuté Ruff y validé los YAML. Cuando el primer build
+  falló porque intentaba instalar `requirements.txt` como wheel, corregí el Dockerfile
+  y volví a construirlo con éxito.
+
+La configuración de credenciales, la ejecución en GitHub Actions/Jenkins, el despliegue
+en k3s y las capturas de operación las hago yo en los servicios correspondientes; no
+las considero evidencias hasta comprobarlas allí y registrarlas en `devops/EVIDENCIAS.md`.
+
 ## Cómo lo usé en cada reto
 
 - **Backend 1 — Análisis de arquitectura:** Gemini me ayudó con el borrador sobre `diagnosis`, `auth` y `corozina`. Copilot lo usé para contrastar nombres y comportamientos con el repositorio original. Los riesgos finales y la estrategia de migración los revisé y los dejé como yo los entendí.
