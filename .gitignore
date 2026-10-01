@@ -31,6 +31,8 @@ build/
 *.tsbuildinfo
 frontend/vite.config.js
 frontend/vite.config.d.ts
+frontend/test-results/
+frontend/playwright-report/
 
 # Bases de datos SQLite (si haces pruebas locales)
 db.sqlite3
