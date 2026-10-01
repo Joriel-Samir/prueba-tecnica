@@ -50,6 +50,10 @@ La captura de la pestaña **Tags** de Docker Hub se conserva como evidencia visu
 
 ![Docker Hub: digest de la entrega final v1.0.2](evidencias/Screenshot%202026-09-30%20210329.png)
 
+![Docker Hub: tags de la entrega final v1.0.3](evidencias/Screenshot%202026-09-30%20211330.png)
+
+![Docker Hub: digest de la entrega final v1.0.3](evidencias/Screenshot%202026-09-30%20211407.png)
+
 ## DevOps 2 — Jenkins → Docker Hub
 
 - [ ] Etapa de pruebas exitosa: _captura o enlace_
