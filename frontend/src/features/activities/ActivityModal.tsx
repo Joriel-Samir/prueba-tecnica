@@ -1,4 +1,5 @@
 import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { getApiFieldErrors } from '../../lib/api';
 import type { Activity, Associate } from '../../types';
 
 interface ActivityModalProps {
@@ -18,6 +19,7 @@ export function ActivityModal({ isOpen, onClose, activity, associates, onSave }:
     assignee: activity?.assignee ?? 'Ana García',
     assigneeId: activity?.assigneeId,
   });
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     setForm({
@@ -34,8 +36,13 @@ export function ActivityModal({ isOpen, onClose, activity, associates, onSave }:
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await onSave(form);
-    onClose();
+    setFieldErrors({});
+    try {
+      await onSave(form);
+      onClose();
+    } catch (error) {
+      setFieldErrors(getApiFieldErrors(error));
+    }
   };
 
   if (!isOpen) {
@@ -60,6 +67,7 @@ export function ActivityModal({ isOpen, onClose, activity, associates, onSave }:
             value={form.start ?? ''}
             onChange={(event) => setForm((current) => ({ ...current, start: event.target.value }))}
           />
+          {fieldErrors.fecha_inicio ? <p className="field-error">{fieldErrors.fecha_inicio}</p> : null}
 
           <label htmlFor="end-date">Fecha y hora de fin</label>
           <input
@@ -68,6 +76,7 @@ export function ActivityModal({ isOpen, onClose, activity, associates, onSave }:
             value={form.end ?? ''}
             onChange={(event) => setForm((current) => ({ ...current, end: event.target.value }))}
           />
+          {fieldErrors.fecha_fin ? <p className="field-error">{fieldErrors.fecha_fin}</p> : null}
 
           <label htmlFor="activity-title">Título</label>
           <input
@@ -77,6 +86,7 @@ export function ActivityModal({ isOpen, onClose, activity, associates, onSave }:
             placeholder="Descripción corta"
             onChange={(event) => setForm((current) => ({ ...current, title: event.target.value }))}
           />
+          {fieldErrors.tipo ? <p className="field-error">{fieldErrors.tipo}</p> : null}
 
           <label htmlFor="assignee-id">Asociado</label>
           <select
@@ -96,6 +106,7 @@ export function ActivityModal({ isOpen, onClose, activity, associates, onSave }:
               </option>
             ))}
           </select>
+          {fieldErrors.asociado ? <p className="field-error">{fieldErrors.asociado}</p> : null}
 
           <label htmlFor="notes">Notas</label>
           <textarea
@@ -105,6 +116,7 @@ export function ActivityModal({ isOpen, onClose, activity, associates, onSave }:
             value={form.notes ?? ''}
             onChange={(event) => setForm((current) => ({ ...current, notes: event.target.value }))}
           />
+          {fieldErrors.descripcion ? <p className="field-error">{fieldErrors.descripcion}</p> : null}
 
           <div className="modal-actions">
             <button type="button" className="secondary-button" onClick={onClose}>

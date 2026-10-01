@@ -1,4 +1,4 @@
-import type { Activity, Associate, AuthSession, BulkUploadResult, LoginRequest, RegisterRequest } from '../types';
+import type { Activity, Associate, AuthSession, BulkUploadResult, LoginRequest, RegisterRequest, Role } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 const SESSION_STORAGE_KEY = 'ihungo-session';
@@ -11,6 +11,28 @@ export class ApiError extends Error {
   ) {
     super(message);
     this.name = 'ApiError';
+  }
+}
+
+export function getApiFieldErrors(error: unknown): Record<string, string> {
+  if (!(error instanceof ApiError) || !error.details || typeof error.details !== 'object') return {};
+  const details = error.details as Record<string, unknown>;
+  const source = details.details && typeof details.details === 'object'
+    ? details.details as Record<string, unknown>
+    : details;
+  return Object.fromEntries(Object.entries(source).map(([key, value]) => [
+    key,
+    Array.isArray(value) ? value.join(' ') : String(value),
+  ]));
+}
+
+function decodeRole(accessToken: string): Role | undefined {
+  try {
+    const payload = accessToken.split('.')[1];
+    const decoded = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/'))) as { role?: Role };
+    return decoded.role;
+  } catch {
+    return undefined;
   }
 }
 
@@ -151,7 +173,7 @@ function toApiActivity(payload: Partial<Activity>, requireAssignee = false): Rec
 
 export const api = {
   login: async (payload: LoginRequest): Promise<AuthSession> => {
-    const result = await request<{ access: string; refresh: string }>('/api/auth/token/', {
+    const result = await request<{ access: string; refresh: string; role?: Role }>('/api/auth/token/', {
       method: 'POST',
       body: JSON.stringify(payload),
     });
@@ -159,7 +181,7 @@ export const api = {
     return {
       access: result.access,
       refresh: result.refresh,
-      user: { id: payload.email, name: payload.email.split('@')[0], email: payload.email, role: 'admin' },
+      user: { id: payload.email, name: payload.email.split('@')[0], email: payload.email, role: result.role ?? decodeRole(result.access) ?? 'associate' },
     };
   },
   register: async (payload: RegisterRequest): Promise<{ message: string }> => {

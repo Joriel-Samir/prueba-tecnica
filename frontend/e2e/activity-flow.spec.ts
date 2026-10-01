@@ -8,7 +8,7 @@ test('permite ingresar, crear una actividad y reprogramarla', async ({ page }) =
     await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({ access: 'access-token', refresh: 'refresh-token' }),
+      body: JSON.stringify({ access: 'access-token', refresh: 'refresh-token', role: 'admin' }),
     });
   });
   await page.route('**/api/asociados/**', async (route) => {

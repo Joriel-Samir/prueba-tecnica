@@ -145,6 +145,13 @@ p {
   font-weight: 600;
 }
 
+.field-error {
+  margin-top: -0.55rem;
+  color: #b91c1c;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
 .form-error {
   color: #b91c1c;
 }
@@ -252,6 +259,33 @@ p {
 .bulk-result ul {
   margin: 0.65rem 0 0;
   padding-left: 1.25rem;
+}
+
+.bulk-preview {
+  overflow-x: auto;
+  padding: 0.65rem;
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  background: white;
+}
+
+.bulk-preview table {
+  width: 100%;
+  margin-top: 0.5rem;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.bulk-preview th,
+.bulk-preview td {
+  padding: 0.4rem 0.55rem;
+  border: 1px solid #dbeafe;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.bulk-preview th {
+  background: #eff6ff;
 }
 
 .calendar-grid {
