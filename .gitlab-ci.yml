@@ -1,2 +1,15 @@
 include:
   - local: backend/4-api/.gitlab-ci.yml
+
+frontend_quality:
+  stage: test
+  image: node:20-bookworm
+  script:
+    - cd frontend
+    - npm ci
+    - npm run lint
+    - npm run typecheck
+    - npm run test:run
+    - npx playwright install --with-deps chromium
+    - npm run test:e2e
+    - npm run build

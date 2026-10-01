@@ -28,6 +28,9 @@ node_modules/
 dist/
 build/
 .npm/
+*.tsbuildinfo
+frontend/vite.config.js
+frontend/vite.config.d.ts
 
 # Bases de datos SQLite (si haces pruebas locales)
 db.sqlite3
