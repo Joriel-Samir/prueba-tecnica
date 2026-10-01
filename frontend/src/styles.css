@@ -1,0 +1,537 @@
+:root {
+  font-family: Inter, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #10213a;
+  background: #eff4ff;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+  min-width: 320px;
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #eaf2ff 0%, #cee2ff 100%);
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  border: none;
+  border-radius: 12px;
+  padding: 0.8rem 1.2rem;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+button:hover {
+  opacity: 0.95;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+}
+
+.auth-layout {
+  width: min(1100px, 100%);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 25px 60px rgba(37, 99, 235, 0.12);
+}
+
+.auth-panel {
+  border-radius: 18px;
+  padding: 2rem;
+}
+
+.auth-panel--login {
+  background: white;
+}
+
+.auth-panel--register {
+  background: linear-gradient(160deg, #1d4ed8 0%, #1e3a8a 100%);
+  color: white;
+}
+
+.auth-card,
+.register-form,
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.auth-form label,
+.register-form label,
+.modal-form label {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.auth-form input,
+.register-form input,
+.modal-form input,
+.modal-form textarea,
+.modal-form select {
+  width: 100%;
+  padding: 0.8rem 0.9rem;
+  border-radius: 12px;
+  border: 1px solid #bfdbfe;
+  background: #f8fbff;
+}
+
+.auth-header,
+.register-copy {
+  margin-bottom: 1rem;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+.secondary-button {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.form-error,
+.form-success {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.form-error {
+  color: #b91c1c;
+}
+
+.form-success {
+  color: #146c43;
+}
+
+.register-form button {
+  margin-top: 0.5rem;
+  background: white;
+  color: #1d4ed8;
+}
+
+.calendar-shell {
+  width: min(1200px, 100%);
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 24px;
+  padding: 1.5rem;
+  box-shadow: 0 30px 70px rgba(15, 23, 42, 0.12);
+}
+
+.topbar,
+.calendar-toolbar,
+.calendar-header-row,
+.modal-header,
+.modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.topbar {
+  margin-bottom: 1.5rem;
+}
+
+.topbar-actions,
+.calendar-views {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.6rem 0.8rem;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+.calendar-toolbar {
+  background: #f8fbff;
+  border: 1px solid #dbeafe;
+  border-radius: 14px;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.active-view {
+  background: #1d4ed8;
+  color: white;
+}
+
+.calendar-panel {
+  border: 1px solid #dbeafe;
+  border-radius: 18px;
+  background: white;
+  padding: 1rem;
+}
+
+.bulk-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #bfdbfe;
+  border-radius: 16px;
+  background: #eff6ff;
+}
+
+.bulk-form {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.bulk-form input[type='file'] {
+  width: 100%;
+  padding: 0.65rem;
+  border: 1px dashed #60a5fa;
+  border-radius: 10px;
+  background: white;
+}
+
+.bulk-result {
+  grid-column: 1 / -1;
+  padding-top: 0.5rem;
+  border-top: 1px solid #bfdbfe;
+}
+
+.bulk-result ul {
+  margin: 0.65rem 0 0;
+  padding-left: 1.25rem;
+}
+
+.calendar-grid {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.calendar-grid--día {
+  grid-template-columns: minmax(260px, 1fr);
+}
+
+.calendar-day {
+  min-height: 150px;
+  padding: 0.6rem;
+  border: 1px solid #dbeafe;
+  border-radius: 12px;
+  background: #fbfdff;
+}
+
+.calendar-day:hover {
+  border-color: #93c5fd;
+  background: #f8fbff;
+}
+
+.calendar-day--muted {
+  opacity: 0.5;
+}
+
+.calendar-day__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  color: #64748b;
+  font-size: 0.78rem;
+  text-transform: capitalize;
+}
+
+.calendar-day__header strong {
+  color: #10213a;
+  font-size: 1rem;
+}
+
+.calendar-period-title {
+  flex: 1;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.activity-card {
+  padding: 1rem;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #f8fbff 0%, #edf5ff 100%);
+  border: 1px solid #dfeaff;
+  cursor: pointer;
+}
+
+.calendar-day .activity-card {
+  margin-bottom: 0.45rem;
+  padding: 0.65rem;
+  cursor: grab;
+}
+
+.calendar-day .activity-card:active {
+  cursor: grabbing;
+}
+
+.calendar-day .activity-card h3 {
+  font-size: 0.85rem;
+}
+
+.calendar-day .activity-card p {
+  display: none;
+}
+
+.agenda-list {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.activity-card.is-selected {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.activity-card__time {
+  color: #1d4ed8;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.assignee {
+  display: inline-block;
+  margin-top: 0.75rem;
+  color: #334155;
+  font-weight: 600;
+}
+
+.fab {
+  position: fixed;
+  right: 2rem;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 16px 30px rgba(37, 99, 235, 0.3);
+  font-size: 2rem;
+}
+
+.fab--add {
+  bottom: 3.5rem;
+}
+
+.fab--delete {
+  bottom: 10rem;
+  background: #ef4444;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(15, 23, 42, 0.52);
+  padding: 1rem;
+}
+
+.modal-card {
+  width: min(540px, 100%);
+  background: white;
+  border-radius: 18px;
+  padding: 1.5rem;
+}
+
+.modal-form {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 1rem;
+}
+
+.tracking-shell {
+  width: min(1200px, 100%);
+  min-height: calc(100vh - 3rem);
+  padding: 1.5rem;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 30px 70px rgba(15, 23, 42, 0.12);
+}
+
+.tracking-header,
+.tracking-controls,
+.tracking-metrics {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.tracking-form {
+  display: grid;
+  grid-template-columns: auto minmax(180px, 1fr) auto minmax(180px, 1fr) auto;
+  align-items: end;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+.tracking-form input {
+  width: 100%;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+}
+
+.tracking-map-wrap {
+  overflow: hidden;
+  min-height: 460px;
+  border: 1px solid #bfdbfe;
+  border-radius: 18px;
+}
+
+.tracking-map {
+  height: 460px;
+  width: 100%;
+}
+
+.tracking-marker-wrapper {
+  background: transparent;
+  border: 0;
+}
+
+.tracking-marker {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border: 2px solid white;
+  border-radius: 50%;
+  color: white;
+  font-weight: 800;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.3);
+}
+
+.tracking-controls {
+  justify-content: flex-start;
+  margin: 1rem 0;
+}
+
+.tracking-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 1rem;
+  border-radius: 14px;
+  background: #eff6ff;
+}
+
+.tracking-metrics div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.tracking-metrics span {
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+  .auth-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .calendar-toolbar,
+  .topbar,
+  .topbar-actions,
+  .calendar-header-row,
+  .modal-actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .calendar-period-title {
+    order: -1;
+    align-self: center;
+  }
+
+  .calendar-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .calendar-grid--día {
+    grid-template-columns: 1fr;
+  }
+
+  .bulk-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .tracking-form {
+    grid-template-columns: 1fr;
+  }
+
+  .tracking-header,
+  .tracking-controls {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .tracking-metrics {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .app-shell {
+    padding: 1rem;
+  }
+
+  .fab {
+    right: 1rem;
+  }
+}
