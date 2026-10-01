@@ -14,11 +14,12 @@
 
 ## DevOps 1 — GitHub Actions → Docker Hub
 
-- [x] Lint y pruebas exitosos: [job de Lint and tests](https://github.com/Joriel-Samir/prueba-tecnica/actions/runs/36800428670/job/110173292329)
-- [x] Build y escaneo Trivy exitosos: [job de Build and scan image](https://github.com/Joriel-Samir/prueba-tecnica/actions/runs/36800428670/job/110173563178)
-- [x] Publicación exitosa: [job de Publish immutable tags](https://github.com/Joriel-Samir/prueba-tecnica/actions/runs/36800428670/job/110173745470)
+- [x] Lint y pruebas exitosos: [job de Lint and tests](https://github.com/Joriel-Samir/prueba-tecnica/actions/runs/36803766957/job/110183566260)
+- [x] Build y escaneo Trivy exitosos: [job de Build and scan image](https://github.com/Joriel-Samir/prueba-tecnica/actions/runs/36803766957/job/110183790867)
+- [x] Publicación exitosa: [job de Publish immutable tags](https://github.com/Joriel-Samir/prueba-tecnica/actions/runs/36803766957/job/110183985038)
 - [x] Publicación visible en Docker Hub: [jorielsamir/actividades-api](https://hub.docker.com/r/jorielsamir/actividades-api/tags)
 - [x] Tag semántico `v1.0.1` visible en Docker Hub.
+- [x] Tag semántico final `v1.0.2` visible en Docker Hub.
 - [x] Tag SHA `sha-c6ee63b6261f795d61b30ed4c881700743de554b` visible en Docker Hub.
 
 ### Evidencia de etiquetas publicadas
