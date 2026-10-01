@@ -80,4 +80,4 @@ def log_turn(
         "status": status,
         "tool_errors": [r.get("error") for r in results if r.get("error")],
     }
-    get_logger().info(json.dumps(record, ensure_ascii=False))
+    get_logger().info(json.dumps(record, ensure_ascii=False, default=str))
