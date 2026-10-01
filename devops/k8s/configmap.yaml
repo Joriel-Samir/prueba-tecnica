@@ -8,5 +8,5 @@ data:
   ALLOWED_HOSTS: "demo-backend,localhost"
   DB_NAME: "actividades"
   DB_USER: "actividades"
-  DB_HOST: "postgres"
+  DB_HOST: "host.k3d.internal"
   DB_PORT: "5432"

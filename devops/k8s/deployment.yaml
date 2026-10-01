@@ -24,7 +24,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
         - name: app
-          image: docker.io/REPLACE_WITH_DOCKERHUB_USER/actividades-api:REPLACE_WITH_IMMUTABLE_TAG
+          image: docker.io/jorielsamir/actividades-api:v1.0.1
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
