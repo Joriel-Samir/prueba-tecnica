@@ -18,6 +18,9 @@ __pycache__/
 coverage.xml
 htmlcov/
 staticfiles/
+.ci-venv/
+test/
+tests/
 .venv/
 venv/
 env/
