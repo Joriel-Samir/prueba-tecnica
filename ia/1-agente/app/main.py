@@ -6,9 +6,9 @@ from typing import Annotated
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from .api.dependencies import build_provider
 from .api.routes import chat
 from .config.settings import Settings, get_settings
-from .api.dependencies import build_provider
 from .models.system import HealthResponse
 
 app = FastAPI(

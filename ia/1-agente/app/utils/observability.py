@@ -28,7 +28,7 @@ _logger: logging.Logger | None = None
 
 def get_logger() -> logging.Logger:
     """Retorna (y configura perezosamente) el logger del agente."""
-    global _logger  # noqa: PLW0603
+    global _logger
     if _logger is not None:
         return _logger
 

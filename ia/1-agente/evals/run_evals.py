@@ -14,8 +14,8 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from app.main import build_provider
-from app.services.agent import AgentSession
 from app.providers.llm import MockProvider
+from app.services.agent import AgentSession
 
 
 def load_cases(path: Path):

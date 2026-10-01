@@ -3,7 +3,9 @@ from rest_framework.test import APIClient
 
 
 @pytest.mark.django_db
-@pytest.mark.parametrize("fixture,role", [("asociado", "associate"), ("administrador", "admin")])
+@pytest.mark.parametrize(
+    "fixture,role", [("asociado", "associate"), ("administrador", "admin")]
+)
 def test_login_con_email_devuelve_access_y_refresh(fixture, role, password, request):
     usuario = request.getfixturevalue(fixture)
 

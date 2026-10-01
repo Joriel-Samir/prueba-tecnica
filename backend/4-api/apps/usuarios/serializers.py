@@ -11,12 +11,18 @@ class IhungoTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        token['role'] = 'admin' if getattr(user, 'es_administrador', False) else 'associate'
+        token['role'] = (
+            'admin' if getattr(user, 'es_administrador', False) else 'associate'
+        )
         return token
 
     def validate(self, attrs):
         data = super().validate(attrs)
-        data['role'] = 'admin' if getattr(self.user, 'es_administrador', False) else 'associate'
+        data['role'] = (
+            'admin'
+            if getattr(self.user, 'es_administrador', False)
+            else 'associate'
+        )
         return data
 
 

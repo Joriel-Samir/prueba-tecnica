@@ -1,15 +1,13 @@
 ﻿from __future__ import annotations
 
-from unittest.mock import patch
 from datetime import datetime
+from unittest.mock import patch
 from zoneinfo import ZoneInfo
 
 import pytest
-
+from app.providers.llm import MockProvider
 from app.services.agent import AgentSession
 from app.utils.dates import is_precise_date, resolve_range, resolve_relative_date
-from app.providers.llm import MockProvider
-
 
 # ---------------------------------------------------------------------------
 # Fixtures

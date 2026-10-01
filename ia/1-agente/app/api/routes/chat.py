@@ -2,14 +2,15 @@
 from __future__ import annotations
 
 import json
-from typing import Annotated, Generator
+from collections.abc import Generator
+from typing import Annotated
 
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 
-from ..dependencies import get_session_manager
 from ...models.chat import AgentTurn, ChatRequest, ConfirmRequest
 from ...services.session_manager import SessionManager
+from ..dependencies import get_session_manager
 
 router = APIRouter(prefix="/api", tags=["agent"])
 SessionManagerDep = Annotated[SessionManager, Depends(get_session_manager)]
