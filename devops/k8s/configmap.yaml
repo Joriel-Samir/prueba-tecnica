@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: demo-backend-config
+  namespace: demo
+data:
+  DEBUG: "False"
+  ALLOWED_HOSTS: "demo-backend,localhost"
+  DB_NAME: "actividades"
+  DB_USER: "actividades"
+  DB_HOST: "postgres"
+  DB_PORT: "5432"
