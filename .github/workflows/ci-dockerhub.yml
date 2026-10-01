@@ -25,7 +25,7 @@ jobs:
         env:
           POSTGRES_DB: actividades_test
           POSTGRES_USER: actividades
-          POSTGRES_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
+          POSTGRES_PASSWORD: ci-${{ github.run_id }}-${{ github.run_attempt }}
         ports:
           - 5432:5432
         options: >-
@@ -37,12 +37,12 @@ jobs:
       run:
         working-directory: backend/4-api
     env:
-      SECRET_KEY: ${{ secrets.CI_SECRET_KEY }}
+      SECRET_KEY: ci-secret-${{ github.run_id }}-${{ github.run_attempt }}
       DEBUG: 'False'
       ALLOWED_HOSTS: localhost,127.0.0.1
       DB_NAME: actividades_test
       DB_USER: actividades
-      DB_PASSWORD: ${{ secrets.CI_DB_PASSWORD }}
+      DB_PASSWORD: ci-${{ github.run_id }}-${{ github.run_attempt }}
       DB_HOST: 127.0.0.1
       DB_PORT: '5432'
     steps:

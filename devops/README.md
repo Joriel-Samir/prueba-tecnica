@@ -15,7 +15,7 @@ Configure en el repositorio espejo de GitHub los secrets `DOCKERHUB_USERNAME` y 
 
 Las etiquetas publicadas incluyen rama, tag semántico, `latest` en `main` y SHA largo. No se usan credenciales en el YAML.
 
-El workflow requiere configurar también los secretos de CI `CI_SECRET_KEY` y `CI_DB_PASSWORD` para la base de datos temporal y la clave Django de las pruebas. Son valores exclusivos del pipeline y no se guardan en el repositorio.
+El job de pruebas genera credenciales efímeras a partir de `github.run_id` y `github.run_attempt`. Solo viven durante esa ejecución aislada de CI; no son credenciales de despliegue y no se guardan en el repositorio. Los únicos secretos requeridos para publicar imágenes son `DOCKERHUB_USERNAME` y `DOCKERHUB_TOKEN`.
 
 ## Jenkins
 
