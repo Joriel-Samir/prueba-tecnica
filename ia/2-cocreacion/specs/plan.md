@@ -2,32 +2,32 @@
 
 ## Unidades de trabajo
 
-### 1. XS — Definir contrato de importación
+### IA2-UT-01 — XS — Definir contrato de importación
 **Objetivo:** fijar el formato de entrada y la respuesta esperada.  
 **Criterio asociado:** HU-01, HU-03.  
 **Entregable:** payload de entrada, estructura de salida y errores por fila.
 
-### 2. S — Validación de fila y esquema
+### IA2-UT-02 — S — Validación de fila y esquema
 **Objetivo:** validar campos obligatorios y tipos.  
 **Criterio asociado:** HU-02, HU-03.  
 **Entregable:** serializer o validador con reglas mínimas de formato.
 
-### 3. S — Detección de duplicados y reglas de negocio
+### IA2-UT-03 — S — Detección de duplicados y reglas de negocio
 **Objetivo:** impedir registros repetidos y asegurar integridad.  
 **Criterio asociado:** HU-02, HU-04.  
 **Entregable:** servicio de registro con chequeos de email e identificación.
 
-### 4. M — Procesamiento por lote y resumen final
+### IA2-UT-04 — M — Procesamiento por lote y resumen final
 **Objetivo:** recorrer archivo, crear registros válidos y acumular errores.  
 **Criterio asociado:** HU-01, HU-03.  
 **Entregable:** flujo de carga masiva con total, created y errors.
 
-### 5. M — Endpoint HTTP con permisos
+### IA2-UT-05 — M — Endpoint HTTP con permisos
 **Objetivo:** exponer la operación en la API con autenticación JWT y permisos.  
 **Criterio asociado:** HU-02, HU-04.  
 **Entregable:** endpoint protegido y respuesta normalizada.
 
-### 6. S — Pruebas de integración y regresión
+### IA2-UT-06 — S — Pruebas de integración y regresión
 **Objetivo:** comprobar escenarios válidos y de error.  
 **Criterio asociado:** HU-01 a HU-04.  
 **Entregable:** suite con casos de éxito, duplicado, fila incompleta y permisos.
@@ -44,3 +44,16 @@
 ## Criterio de fin
 
 La funcionalidad se entregará cuando cada unidad de trabajo tenga prueba asociada y el conjunto de requisitos quede cubierto sin contradicciones entre el plan, el diseño y el código.
+
+## Trazabilidad de la implementación existente
+
+La funcionalidad de carga masiva de asociados fue implementada en Backend 4 antes
+de que estas unidades recibieran sus identificadores estables. Por transparencia,
+la relación histórica verificable es:
+
+- `IA2-UT-01` a `IA2-UT-05`: `c84149e` (`feat: complete associate and activity API requirements`).
+- `IA2-UT-06`: `07f1403` (`test: verify XLSX associate imports and invalid files`).
+- Especificación y guía: `27154d0` (`docs: add co-creation specs for bulk-load feature`).
+
+Los commits nuevos deben incluir explícitamente el identificador de la unidad,
+por ejemplo `IA2-UT-06: ampliar pruebas de carga masiva`.
