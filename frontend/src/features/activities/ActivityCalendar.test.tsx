@@ -70,7 +70,7 @@ describe('ActivityCalendar', () => {
 
     const createButton = screen.getByRole('button', { name: 'Crear actividad' });
     const deleteButton = screen.getByRole('button', { name: 'Eliminar actividad seleccionada' });
-    expect(createButton).toBeDisabled();
+    expect(createButton.hasAttribute('disabled')).toBe(true);
     await screen.findByText('Visita de cliente');
     await fireEvent.click(screen.getByText('Visita de cliente'));
     expect(screen.getByRole('button', { name: 'Editar actividad' }).hasAttribute('disabled')).toBe(false);
