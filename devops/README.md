@@ -30,7 +30,7 @@ El parámetro `DOCKERHUB_NAMESPACE` es público. El pipeline solo construye, esc
 
 1. Aplique `namespace.yaml`, `configmap.yaml` y un Secret creado desde la plantilla de `secret.yaml`.
 2. Cambie en `deployment.yaml` el usuario de Docker Hub y use una etiqueta inmutable (idealmente un digest `@sha256:...`).
-3. Aplique `deployment.yaml` y `service.yaml`.
+3. Aplique `deployment.yaml` y `service.yaml`. El `initContainer` ejecuta las migraciones antes de iniciar cada pod.
 4. Verifique `kubectl -n demo rollout status deployment/demo-backend` y acceda al NodePort `30080`.
 
 Ejemplo para crear el Secret sin guardarlo en Git:

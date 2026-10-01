@@ -59,7 +59,7 @@ La captura de la pestaña **Tags** de Docker Hub se conserva como evidencia visu
 
 - [x] `kubectl get nodes` muestra los nodos `k3d-ihungo-agent-0` y `k3d-ihungo-server-0` en `Ready`.
 - [x] `kubectl -n demo get deploy,po,svc` muestra `demo-backend 2/2`, PostgreSQL `1/1` y NodePort `30080`.
-- [x] `GET /api/health/` responde `{"status":"ok","database":"ok"}` después de ejecutar las migraciones.
+- [x] `GET /api/health/` responde `{"status":"ok","database":"ok"}`; las migraciones se ejecutan automáticamente en el `initContainer`.
 - [x] `kubectl -n demo rollout status deployment/demo-backend` terminó con `successfully rolled out`.
 - [x] Rolling update verificado cambiando temporalmente `v1.0.1` a `main` y restaurando `v1.0.1`; ambos rollouts terminaron correctamente y health siguió en `ok`.
 
@@ -90,3 +90,4 @@ Secret de Kubernetes y no se guardó en Git.
 | Deployment sin recursos ni estrategia segura | Requests/limits y rolling update `maxUnavailable: 0` | `devops/k8s/deployment.yaml` |
 | Referencia usaba `DJANGO_SECRET_KEY`, pero Django lee `SECRET_KEY` | Nombre alineado con `config/settings.py` | `devops/k8s/secret.yaml` |
 | La referencia no incluía PostgreSQL reproducible para k3s | StatefulSet con volumen persistente, probes y credenciales externas | `devops/k8s/postgres.yaml` |
+| El despliegue requería migraciones manuales | `initContainer` ejecuta `manage.py migrate --noinput` antes de iniciar la API | `devops/k8s/deployment.yaml` |
