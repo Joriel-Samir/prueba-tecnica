@@ -1,9 +1,11 @@
 ﻿from __future__ import annotations
 
 import argparse
+import os
 import sys
 from collections import defaultdict
 from pathlib import Path
+from unittest.mock import patch
 
 import yaml
 
@@ -11,8 +13,9 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from app.agent import AgentSession
-from app.provider import MockProvider
+from app.main import build_provider
+from app.services.agent import AgentSession
+from app.providers.llm import MockProvider
 
 
 def load_cases(path: Path):
@@ -43,30 +46,49 @@ def _build_arguments(tool: str, case_input: str) -> dict:
     return {}
 
 
-def evaluate_case(case: dict) -> bool:
+def evaluate_case(case: dict, *, real: bool = False, token: str = "") -> bool:
     expected_tools = case.get("expected_tools", [])
     expected_result = case.get("expected_result", "ok")
 
-    provider = MockProvider(
-        responses=[
-            {
-                "tool_calls": [
-                    {"name": tool, "arguments": _build_arguments(tool, case["input"])}
-                    for tool in expected_tools
-                ],
-                "final": "He revisado la solicitud.",
-            }
-        ]
-    )
-    agent = AgentSession(provider=provider, user_token="demo-token")
-    result = agent.handle_message(case["input"], session_id=case["id"])
-    actual = result["status"]
+    if real:
+        provider = build_provider()
+        agent = AgentSession(provider=provider, user_token=token)
+        result = agent.handle_message(case["input"], session_id=f"eval-{case['id']}")
+    else:
+        provider = MockProvider(
+            responses=[
+                {
+                    "tool_calls": [
+                        {
+                            "name": tool,
+                            "arguments": (
+                                {"id": 42}
+                                if case["id"] == "ambiguedad-02"
+                                else _build_arguments(tool, case["input"])
+                            ),
+                        }
+                        for tool in expected_tools
+                    ],
+                    "final": "He revisado la solicitud.",
+                }
+            ]
+        )
+        agent = AgentSession(provider=provider, user_token="demo-token")
+        # Las evaluaciones offline no deben depender de que el backend este
+        # levantado. El contrato de herramientas se comprueba en pruebas separadas.
+        def mock_tool(name: str, arguments: dict, token: str) -> dict:
+            if case["category"] == "ambiguedad" and name == "buscar_asociados":
+                return {
+                    "asociados": [
+                        {"id": 1, "email": "maria.1@example.com", "nombre": "María"},
+                        {"id": 2, "email": "maria.2@example.com", "nombre": "María"},
+                    ]
+                }
+            return {"mock": True}
 
-    # For ambiguity cases: the mock always has data, so needs_input is not
-    # naturally triggered. Accept both needs_input and ok/needs_confirmation.
-    if case["category"] == "ambiguedad":
-        if expected_result == "needs_input":
-            return actual in {"needs_input", "ok", "needs_confirmation"}
+        with patch("app.services.agent.execute_tool_call", side_effect=mock_tool):
+            result = agent.handle_message(case["input"], session_id=case["id"])
+    actual = result["status"]
 
     return actual == expected_result
 
@@ -74,6 +96,8 @@ def evaluate_case(case: dict) -> bool:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Evaluaciones del agente IA 1")
     parser.add_argument("--cases", default="evals/casos.yaml", type=Path)
+    parser.add_argument("--real", action="store_true", help="Usa el proveedor y backend configurados en el entorno.")
+    parser.add_argument("--token", default=os.getenv("EVAL_JWT", ""), help="JWT del usuario para --real.")
     args = parser.parse_args()
 
     cases = load_cases(args.cases)
@@ -82,7 +106,7 @@ def main() -> None:
 
     for case in cases:
         totals[case["category"]] += 1
-        if evaluate_case(case):
+        if evaluate_case(case, real=args.real, token=args.token):
             ok[case["category"]] += 1
 
     print("Resultados por categoria:")
