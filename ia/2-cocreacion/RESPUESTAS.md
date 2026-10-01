@@ -98,11 +98,9 @@ Para comandos destructivos, el principio es simple: no ejecutar acciones fuera d
 
 ### 15. Seis meses después, alguien pregunta por qué una regla de negocio está implementada de cierta forma. ¿Dónde debería encontrar la respuesta y cómo garantiza que exista?
 
-La respuesta debería encontrarse en la trazabilidad del proyecto: especificación, decisiones de diseño, historial de PR, bitácora de aprobación y, en el caso más fuerte, una prueba de aceptación vinculada a la historia. No basta con un comentario en el código; eso se vuelve frágil. La conexión correcta es requisito → diseño → tarea → implementación → prueba → PR. Si la regla de negocio se explica en una historia y se valida con una prueba, esa evidencia permite responder por qué se hizo así.
+La respuesta debería encontrarse en la trazabilidad del proyecto: especificación, decisiones de diseño, historial de PR, bitácora de aprobación y, sobre todo, una prueba de aceptación vinculada a la historia. No basta con un comentario en el código, porque se vuelve frágil. La conexión correcta es requisito → diseño → tarea → implementación → prueba → PR. Si la regla de negocio se explica en una historia y se valida con una prueba, esa evidencia permite responder por qué se hizo así.
 
-Para garantizarlo, cada cambio debe tener una historia, un criterio de aceptación y una prueba vinculada. La bitácora y el diseño documentan decisiones no evidentes. Así, la respuesta queda rastreable y verificable, sin depender de memoria ni comentarios aislados.
-
-En la revisión de cada PR comprobaría que el identificador del criterio aparezca en la tarea, en la prueba y en la evidencia de ejecución. Si una decisión cambia, exigiría actualizar requisitos, diseño y bitácora en el mismo cambio. De esa manera la documentación no se convierte en un archivo histórico separado del código.
+Para garantizarlo, cada cambio debe tener una historia, un criterio de aceptación y una prueba vinculada. En la revisión del PR comprobaría que el identificador del criterio aparezca en la tarea, en la prueba y en la evidencia de ejecución. La bitácora y el diseño documentan decisiones no evidentes. Si una decisión cambia, exigiría actualizar requisitos, diseño y bitácora en el mismo cambio. Así la documentación permanece conectada al código y no depende de la memoria del equipo.
 
 ## E. Ejercicio práctico
 
