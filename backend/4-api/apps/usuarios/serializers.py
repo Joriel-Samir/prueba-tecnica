@@ -1,9 +1,23 @@
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from apps.core.exceptions import APIConflict
 
 from .models import Asociado
 from .services import AsociadoDuplicado, crear_asociado
+
+
+class IhungoTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token['role'] = 'admin' if getattr(user, 'es_administrador', False) else 'associate'
+        return token
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        data['role'] = 'admin' if getattr(self.user, 'es_administrador', False) else 'associate'
+        return data
 
 
 class AsociadoSerializer(serializers.ModelSerializer):
