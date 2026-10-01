@@ -15,10 +15,31 @@
 ## DevOps 1 — GitHub Actions → Docker Hub
 
 - [ ] Workflow exitoso de lint y pruebas: _enlace a Actions_
-- [ ] Build y escaneo Trivy exitosos: _enlace a Actions_
-- [ ] Publicación desde `main`: _enlace a Actions / Docker Hub_
-- [ ] Publicación de tag `vX.Y.Z`: _enlace a Actions / Docker Hub_
-- [ ] Etiqueta SHA largo visible en Docker Hub: _enlace_
+- [x] Build y escaneo Trivy ejecutados correctamente: [job de Build and scan](https://github.com/Joriel-Samir/prueba-tecnica/actions/runs/36797816537/job/110165452809)
+- [x] Publicación visible en Docker Hub: [jorielsamir/actividades-api](https://hub.docker.com/r/jorielsamir/actividades-api/tags)
+- [x] Tag semántico `v1.0.1` visible en Docker Hub.
+- [x] Tag SHA `sha-c6ee63b6261f795d61b30ed4c881700743de554b` visible en Docker Hub.
+
+### Evidencia de etiquetas publicadas
+
+| Etiqueta | Digest visible | Interpretación |
+| --- | --- | --- |
+| `latest` | `5565a33e3682` | Última imagen publicada |
+| `v1.0.1` | `5565a33e3682` | Versión semántica reproducible |
+| `sha-c6ee63b6261f795d61b30ed4c881700743de554b` | `5565a33e3682` | Commit exacto de origen |
+| `main` | `f961ae605e32` | Imagen previa de la rama principal |
+
+Las tres primeras etiquetas apuntan al mismo digest; son referencias diferentes de
+la misma imagen y no copias duplicadas. La captura de la pestaña **Tags** de Docker Hub
+se conserva como evidencia visual de esta tabla.
+
+### Capturas adjuntas
+
+![Docker Hub: vista del repositorio](evidencias/Screenshot%202026-09-30%20200225.png)
+
+![Docker Hub: tags latest y SHA](evidencias/Screenshot%202026-09-30%20200256.png)
+
+![Docker Hub: tags v1.0.1 y main](evidencias/Screenshot%202026-09-30%20200325.png)
 
 ## DevOps 2 — Jenkins → Docker Hub
 
