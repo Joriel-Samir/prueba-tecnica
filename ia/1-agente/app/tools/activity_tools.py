@@ -1,7 +1,6 @@
 """Casos de uso de herramientas y cliente REST del backend de actividades."""
 from __future__ import annotations
 
-import json
 import unicodedata
 from datetime import datetime, time, timedelta
 from typing import Any
@@ -9,11 +8,15 @@ from typing import Any
 import httpx
 
 from ..config.settings import get_settings
-from ..utils.dates import BOGOTA, resolve_relative_date
 from ..models.tools import (
-    ActualizarActividadArgs, BuscarAsociadosArgs, ConsultarDisponibilidadArgs,
-    CrearActividadArgs, EliminarActividadArgs, ListarActividadesArgs,
+    ActualizarActividadArgs,
+    BuscarAsociadosArgs,
+    ConsultarDisponibilidadArgs,
+    CrearActividadArgs,
+    EliminarActividadArgs,
+    ListarActividadesArgs,
 )
+from ..utils.dates import BOGOTA, resolve_relative_date
 
 _MODELS = {
     "listar_actividades": ListarActividadesArgs,
@@ -175,5 +178,5 @@ def execute_tool_call(name, arguments, token):
         args = validate_tool_call(name, arguments)
         handlers = {"listar_actividades": listar_actividades, "buscar_asociados": buscar_asociados, "consultar_disponibilidad": consultar_disponibilidad, "crear_actividad": crear_actividad, "actualizar_actividad": actualizar_actividad, "eliminar_actividad": eliminar_actividad}
         return handlers[name](token, **args)
-    except Exception as error:
+    except Exception as error:  # noqa: BLE001 - tool failures are returned to the agent
         return {"error": str(error)}

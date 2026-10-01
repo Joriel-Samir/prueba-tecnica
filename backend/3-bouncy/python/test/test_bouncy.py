@@ -3,7 +3,6 @@ import sys
 from pathlib import Path
 
 import pytest
-
 from bouncy import least_number_with_bouncy_ratio
 
 
@@ -35,6 +34,9 @@ def test_cli_prints_result() -> None:
 def test_cli_rejects_invalid_percentage() -> None:
     script = Path(__file__).parents[1] / "bouncy.py"
     result = subprocess.run(
-        [sys.executable, str(script), "100"], capture_output=True, text=True
+        [sys.executable, str(script), "100"],
+        check=False,
+        capture_output=True,
+        text=True,
     )
     assert result.returncode != 0

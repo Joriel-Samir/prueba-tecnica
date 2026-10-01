@@ -1,6 +1,7 @@
 """Find the first integer whose bouncy-number ratio is an exact percentage."""
 
 import argparse
+from itertools import pairwise
 
 
 def _is_bouncy(number: int) -> bool:
@@ -9,7 +10,7 @@ def _is_bouncy(number: int) -> bool:
     has_increase = False
     has_decrease = False
 
-    for left, right in zip(digits, digits[1:]):
+    for left, right in pairwise(digits):
         if left < right:
             has_increase = True
         elif left > right:

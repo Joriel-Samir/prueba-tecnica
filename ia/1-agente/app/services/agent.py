@@ -11,10 +11,14 @@ from typing import Any
 from zoneinfo import ZoneInfo
 
 from ..config.settings import get_settings
+from ..providers.llm import GeminiProvider, LLMProvider, MockProvider, OpenAIProvider
+from ..tools.activity_tools import (
+    execute_tool_call,
+    get_tool_registry,
+    validate_tool_call,
+)
 from ..utils.dates import is_precise_date, resolve_range, resolve_relative_date
 from ..utils.observability import log_turn
-from ..providers.llm import GeminiProvider, LLMProvider, MockProvider, OpenAIProvider
-from ..tools.activity_tools import execute_tool_call, get_tool_registry, validate_tool_call
 
 _settings = get_settings()
 MAX_TOOL_ITERATIONS = _settings.max_tool_iterations
@@ -100,11 +104,11 @@ class AgentSession:
                 normalized.get("desde"), normalized.get("hasta")
             )
         elif name in {"crear_actividad", "actualizar_actividad", "consultar_disponibilidad"}:
+            if normalized.get("fecha") and not is_precise_date(normalized["fecha"]):
+                raise ValueError(
+                    "La fecha es imprecisa; necesito una fecha ISO o una fecha relativa soportada."
+                )
             if normalized.get("fecha"):
-                if not is_precise_date(normalized["fecha"]):
-                    raise ValueError(
-                        "La fecha es imprecisa; necesito una fecha ISO o una fecha relativa soportada."
-                    )
                 normalized["fecha"] = resolve_relative_date(normalized["fecha"])
         return normalized
 
@@ -246,7 +250,7 @@ class AgentSession:
                     result = {"proposed": arguments}
                 else:
                     result = execute_tool_call(name, arguments, self.user_token)
-            except Exception as exc:
+            except Exception as exc:  # noqa: BLE001 - tool failures become user-facing results
                 result = {"error": str(exc)}
                 needs_input = True
             results.append(
@@ -345,7 +349,7 @@ class AgentSession:
                             result = {"proposed": arguments}
                         else:
                             result = execute_tool_call(name, arguments, self.user_token)
-                    except Exception as exc:
+                    except Exception as exc:  # noqa: BLE001 - tool failures become user-facing results
                         result = {"error": str(exc)}
                     results.append(
                         {
