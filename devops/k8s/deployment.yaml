@@ -24,7 +24,7 @@ spec:
       terminationGracePeriodSeconds: 30
       containers:
         - name: app
-          image: docker.io/jorielsamir/actividades-api:v1.0.1
+          image: docker.io/jorielsamir/actividades-api@sha256:fcd3a54d7578f1874c19f7ecdf246eb1129ed85fd1886b6f62ff5cf0b9f6e917
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
