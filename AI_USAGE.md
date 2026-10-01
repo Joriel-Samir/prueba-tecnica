@@ -30,6 +30,15 @@ no conservé el registro exacto de una versión del modelo, lo indico expresamen
   JWT, modelos, admin, registro público y errores uniformes. El CRUD, permisos,
   solapamientos, cargas CSV/XLSX, OpenAPI y configuración PostgreSQL los programé y
   revisé yo, usando Copilot como apoyo puntual.
+- **Frontend — React y TypeScript:** usé GitHub Copilot Chat para explorar la estructura
+  de componentes, aislar la capa API, implementar el calendario, revisar el flujo JWT,
+  preparar pruebas con Testing Library/Playwright y diseñar los adaptadores de mapa.
+  También lo usé para revisar Docker/Nginx, CI, carga masiva y accesibilidad.
+  Verifiqué manualmente los contratos contra Backend 4 y corregí propuestas que no
+  cumplían React 18, TypeScript, la resolución de módulos de Vite, las reglas de roles,
+  el rollback del drag-and-drop, los matchers de Vitest y la compatibilidad de
+  React-Leaflet. La selección de proveedores públicos, el modelo de permisos y la
+  decisión de separar Frontend 1 y Frontend 2 fueron decisiones finales mías.
 
 ## DevOps — Docker, CI/CD y k3s
 
