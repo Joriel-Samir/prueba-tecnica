@@ -42,6 +42,9 @@ riesgos y estrategia de migración a Python 3.12/Django 5.x.
 
 ## Backend 2 — Refactorización
 
+Este reto valida el proveedor desacoplado, la CLI, los reintentos con backoff,
+logging, type hints y pruebas sin llamadas reales a ParallelDots.
+
 ```powershell
 cd backend/2-refactor
 python -m venv .venv
@@ -60,6 +63,9 @@ python -m src.main entrada.xlsx --output salida.xlsx --sheet Hoja1 --col 3
 ```
 
 ## Backend 3 — Bouncy
+
+Este reto valida dos implementaciones independientes, los casos del enunciado,
+entradas inválidas, aritmética entera y paridad Python/TypeScript.
 
 ### Python
 
@@ -123,9 +129,14 @@ No se deben versionar archivos `.env`, contraseñas ni claves reales.
 
 ### Pruebas
 
+La suite valida JWT, permisos, CRUD, solapamientos, cargas masivas y fechas. Para
+reproducir el entorno de CI con Python 3.12 y PostgreSQL usa Docker:
+
 ```powershell
 cd backend/4-api
-pytest -q
+docker compose run --rm --user root web sh -c "pip install --no-cache-dir -r requirements-dev.txt >/tmp/pip.log && pytest -q"
+docker compose run --rm --user root web sh -c "pip install --no-cache-dir -r requirements-dev.txt >/tmp/pip.log && pytest --cov=apps --cov-fail-under=80 -q"
+docker compose run --rm --user root web sh -c "pip install --no-cache-dir -r requirements-dev.txt >/tmp/pip.log && ruff check ."
 ```
 
 Para levantar PostgreSQL mediante Docker Compose:
@@ -155,6 +166,10 @@ npx playwright install chromium
 npm run test:e2e
 npm run build
 ```
+
+`lint` revisa ESLint, `typecheck` valida TypeScript, `test:run` ejecuta pruebas de
+componentes y dominio, `test:e2e` prueba ingreso → crear → arrastrar con Playwright,
+y `build` confirma el bundle de producción.
 
 Para ejecutarlo detrás de Nginx:
 
@@ -222,6 +237,9 @@ Los entregables se encuentran en `ia/2-cocreacion/`:
 - `specs/rules.md`: reglas entregadas al asistente.
 - `specs/bitacora.md`: aprobaciones, rechazos y correcciones.
 
+IA 2 no requiere un servidor: se evalúa revisando respuestas, especificaciones y la
+trazabilidad entre requisitos, diseño, plan, reglas y bitácora.
+
 ## DevOps
 
 Los artefactos de automatización y despliegue están en:
@@ -233,6 +251,38 @@ Los artefactos de automatización y despliegue están en:
 
 El despliegue usa configuración externa, contenedores sin root, probes de salud,
 recursos definidos, rolling updates y PostgreSQL persistente.
+
+### Validación local DevOps
+
+Desde `backend/4-api`:
+
+```powershell
+docker compose build --pull
+docker compose up -d
+Invoke-WebRequest http://localhost/api/health/
+docker compose ps
+docker compose down
+```
+
+GitHub Actions ejecuta calidad, build, Trivy y publicación en Docker Hub. Requiere
+`DOCKERHUB_USERNAME` y `DOCKERHUB_TOKEN` en los secretos del repositorio. Jenkins es
+alternativo y no forma parte de la ejecución presentada.
+
+La evidencia de health, PostgreSQL, réplicas y rolling update está en
+`devops/EVIDENCIAS.md`.
+
+## Orden recomendado para comprobar toda la entrega
+
+1. Ejecutar Backend 3 en Python y TypeScript.
+2. Ejecutar Backend 2 con pytest, Ruff y mypy.
+3. Levantar PostgreSQL y ejecutar Backend 4 con cobertura.
+4. Ejecutar Frontend con lint, tipos, Vitest, Playwright y build.
+5. Ejecutar IA 1 en modo mock y sus evaluaciones offline.
+6. Revisar IA 2 y sus artefactos de co-creación.
+7. Validar Docker/Kubernetes y revisar `devops/EVIDENCIAS.md`.
+
+No ejecutes proveedores reales de IA ni cargas masivas sobre producción durante la
+validación: usa `mock`, dobles de prueba y archivos de desarrollo.
 
 ## Seguridad y uso de IA
 
