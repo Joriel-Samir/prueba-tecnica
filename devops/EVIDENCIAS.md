@@ -20,6 +20,7 @@
 - [x] Publicación visible en Docker Hub: [jorielsamir/actividades-api](https://hub.docker.com/r/jorielsamir/actividades-api/tags)
 - [x] Tag semántico `v1.0.1` visible en Docker Hub.
 - [x] Tag semántico final `v1.0.2` visible en Docker Hub.
+- [x] Tag final endurecido `v1.0.3` creado desde el último commit y publicado en Docker Hub.
 - [x] Tag SHA `sha-c6ee63b6261f795d61b30ed4c881700743de554b` visible en Docker Hub.
 
 ### Evidencia de etiquetas publicadas
